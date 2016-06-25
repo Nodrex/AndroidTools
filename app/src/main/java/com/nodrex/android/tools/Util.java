@@ -63,6 +63,7 @@ import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.DatePicker.OnDateChangedListener;
+import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -1402,6 +1403,19 @@ public class Util {
         public void onDateChanged(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
             changeMonthLanguage(activity,datePicker,arrayId);
         }
+    }
+
+    /**
+     * Shows software keyboard for EditText.<br><br/>
+     * This method should be called after requestFocus of given editText.
+     * @param activity to initiate keyboard if this one does not exists.
+     * @param editText for hom to show keyboard.
+     */
+    public static void showKeyboard(Activity activity, EditText editText){
+        if(activity == null || editText == null) return;
+        InputMethodManager keyboard = Util.getKeyboard(activity);
+        if(keyboard == null) return;
+        keyboard.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
     }
 
     /**
