@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.app.Dialog;
 import android.app.NotificationManager;
 import android.content.ActivityNotFoundException;
@@ -1560,10 +1561,10 @@ public class Util {
         if(myServiceName == null) return false;
         getActivityManager(activity);
         if(activityManager == null) return false;
-        List<ActivityManager.RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
+        List<RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
         if(services == null || services.size() <= 0) return false;
         log("Number of running services: " + services.size());
-        for (ActivityManager.RunningServiceInfo service : services) {
+        for (RunningServiceInfo service : services) {
             if(service == null) continue;
             if(service.service == null)continue;
             String serviceName = service.service.getClassName();
