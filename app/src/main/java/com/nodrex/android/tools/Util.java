@@ -5,6 +5,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.NotificationManager;
 import android.content.ActivityNotFoundException;
@@ -77,6 +78,7 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -118,13 +120,12 @@ public class Util {
     private static ClipboardManager clipboardManager;
     private static NotificationManager notification;
     private static PowerManager powerManager;
-
+    private static ActivityManager activityManager;
     private static InputMethodManager keyboard;
     private static SharedPreferences sharedPref;
     private static Vibrator vibrator;
 
-    private Util() {
-    }
+    private Util() {}
 
     /**
      * Disables all logs.
@@ -183,6 +184,17 @@ public class Util {
         if (activity == null) return null;
         powerManager = (PowerManager) activity.getSystemService(Activity.POWER_SERVICE);
         return powerManager;
+    }
+
+    /**
+     * @param activity
+     * @return ActivityManager  for future use.
+     */
+    public static ActivityManager getActivityManager(Activity activity) {
+        if (activityManager != null) return activityManager;
+        if (activity == null) return null;
+        activityManager = (ActivityManager) activity.getSystemService(Activity.ACTIVITY_SERVICE);
+        return activityManager;
     }
 
     /**
@@ -1537,6 +1549,29 @@ public class Util {
         }
     }
 
+    /**
+     * Checks if given service class is running or not.
+     * @param serviceClass should be subclass of {@link android.app.Service}
+     * @return true if given service is running, false otherwise.
+     */
+    public static boolean isServiceRunning(Activity activity, Class<?> serviceClass) {
+        if(serviceClass == null) return false;
+        String myServiceName = serviceClass.getName();
+        if(myServiceName == null) return false;
+        getActivityManager(activity);
+        if(activityManager == null) return false;
+        List<ActivityManager.RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
+        if(services == null || services.size() <= 0) return false;
+        log("Number of running services: " + services.size());
+        for (ActivityManager.RunningServiceInfo service : services) {
+            if(service == null) continue;
+            if(service.service == null)continue;
+            String serviceName = service.service.getClassName();
+            if(serviceName ==null) continue;
+            if (myServiceName.equals(serviceName)) return true;
+        }
+        return false;
+    }
 
 	/*	public static void showNotification(Activity activity, int iconId, String title, String text, Class open) {
 	if(activity == null) return;
