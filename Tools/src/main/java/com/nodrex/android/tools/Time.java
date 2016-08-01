@@ -134,9 +134,11 @@ public class Time {
     }
 
     /**
+     * @param withTimeZone if true includes ime zone, if false does no includes.
      * @return UTC Date with 0 hour, minute and second and includes current device time zone, means current device's year, month, day depend on device's timezone.
      */
-    public static long getUTCDateWithTimeZone(){
+    public static long getUTCDate(boolean withTimeZone){
+        if(!withTimeZone) return getUTCDate();
         Calendar c = Calendar.getInstance();
         c.setTimeZone(TimeZone.getDefault());
         c.setTimeInMillis(System.currentTimeMillis());
