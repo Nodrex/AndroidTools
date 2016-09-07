@@ -1373,7 +1373,7 @@ public class Util {
     }
 
     /**
-     * Use <b>"QarvaLog"</b> as tag for information logging.</br>
+     * Use <b>"Tools"</b> as tag for information logging.</br>
      * </br>If you want to disable all logs without commenting them, just call disableLogs() method.
      * @param text
      */
