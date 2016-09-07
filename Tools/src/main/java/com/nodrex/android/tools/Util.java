@@ -432,13 +432,13 @@ public class Util {
     //TODO should be tested
 
     /**
-     * <img src="./formatedStr.PNG" /></br></br>
+     * <img src="../../../../../doc/formatedStr.PNG" /><br></br>
      * This is strings.xml content where u , means underline and b means bold.
      * @param activity
      * @param id
      * @return formated String from resources, more concretely from strings.xml which is in values folder.
      */
-    public static String getFormatedStrFromRes(Activity activity, int id) {
+    public static String getFormattedStrFromRes(Activity activity, int id) {
         String str = getStrFromRes(activity, id);
         if (str == null) return null;
         Spanned formatedText = Html.fromHtml(str);
@@ -503,12 +503,22 @@ public class Util {
     }
 
     /**
-     * <img src="./actionBar.PNG" /></br></br>
+     * Underlines text
+     * @param textView
+     */
+    public static void underlineText(TextView textView) {
+        if(textView == null) log("textView is null in underlineText method");
+        textView.setPaintFlags(textView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+    }
+
+    /**
+     * <img src="../../../../../doc/actionBar.PNG"/><br></br>
      * Sets up action bar background and icon.
      * @param activity
      * @param background
      * @param logo
      */
+    @Deprecated
     public static void setUpActionBar(Activity activity, Drawable background, Drawable logo) {
         if (activity == null) return;
         ActionBar actionBar = activity.getActionBar();
@@ -521,12 +531,13 @@ public class Util {
     }
 
     /**
-     * <img src="./actionBar.PNG" /></br></br>
+     * <img src="../../../../../doc/actionBar.PNG"/><br></br>
      * Sets up action bar background and icon.
      * @param activity
      * @param background
      * @param logoId of drawable res.
      */
+    @Deprecated
     public static void setUpActionBar(Activity activity, Drawable background, int logoId) {
         if (activity == null) return;
         ActionBar actionBar = activity.getActionBar();
@@ -539,12 +550,13 @@ public class Util {
     }
 
     /**
-     * <img src="./actionBar.PNG" /></br></br>
+     * <img src="../../../../../doc/actionBar.PNG"/><br></br>
      * Sets up action bar background and icon.
      * @param activity
      * @param backgroundColorId R.color.someColor
      * @param logoId of drawable res.
      */
+    @Deprecated
     public static void setUpActionBar(Activity activity, int backgroundColorId, int logoId) {
         if (activity == null) return;
         ActionBar actionBar = activity.getActionBar();
@@ -557,12 +569,13 @@ public class Util {
     }
 
     /**
-     * <img src="./actionBar.PNG" /></br></br>
+     * <img src="../../../../../doc/actionBar.PNG"/><br></br>
      * Sets up action bar background and icon.
      * @param activity
      * @param backgroundColorId of colors.xml which is located under values folder.
      * @param logo
      */
+    @Deprecated
     public static void setUpActionBar(Activity activity, int backgroundColorId, Drawable logo) {
         if (activity == null) return;
         ActionBar actionBar = activity.getActionBar();
@@ -575,12 +588,13 @@ public class Util {
     }
 
     /**
-     * <img src="./actionBar.PNG" /></br></br>
+     * <img src="../../../../../doc/actionBar.PNG"/><br></br>
      * Sets up action bar background and icon.
      * @param activity
      * @param backgroundColorCode "#FFFFFF"
      * @param logo
      */
+    @Deprecated
     public static void setUpActionBar(Activity activity, String backgroundColorCode, Drawable logo) {
         if (activity == null) return;
         ActionBar actionBar = activity.getActionBar();
@@ -593,12 +607,13 @@ public class Util {
     }
 
     /**
-     * <img src="./actionBar.PNG" /></br></br>
+     * <img src="../../../../../doc/actionBar.PNG"/><br></br>
      * Sets up action bar background and icon.
      * @param activity
      * @param backgroundColorCode "#FFFFFF"
      * @param logoId of drawable res.
      */
+    @Deprecated
     public static void setUpActionBar(Activity activity, String backgroundColorCode, int logoId) {
         if (activity == null) return;
         ActionBar actionBar = activity.getActionBar();
@@ -611,12 +626,13 @@ public class Util {
     }
 
     /**
-     * <img src="./actionBar.PNG" /></br></br>
+     * <img src="../../../../../doc/actionBar.PNG"/><br></br>
      * Sets up action bar background and icon.
      * @param actionBar activity.getActionBar()
      * @param backgroundColorCode android.graphics.Color.WHITE
      * @param logoId of drawable res.
      */
+    @Deprecated
     public static void setUpActionBar(ActionBar actionBar, int backgroundColorCode, int logoId) {
         if (actionBar == null) return;
         actionBar.setBackgroundDrawable(new ColorDrawable(backgroundColorCode));
@@ -627,12 +643,13 @@ public class Util {
     }
 
     /**
-     * <img src="./actionBar.PNG" /></br></br>
+     * <img src="../../../../../doc/actionBar.PNG"/><br></br>
      * Sets up action bar background and icon.
      * @param actionBar activity.getActionBar()
      * @param backgroundColorCode android.graphics.Color.WHITE
      * @param logo
      */
+    @Deprecated
     public static void setUpActionBar(ActionBar actionBar, int backgroundColorCode, Drawable logo) {
         if (actionBar == null) return;
         actionBar.setBackgroundDrawable(new ColorDrawable(backgroundColorCode));
@@ -669,7 +686,7 @@ public class Util {
 
     /**
      * Creates new dialog without title, with transparent background and custom animation.</br></br>
-     * <img src="./DialogAnimation.PNG" /></br></br>
+     * <img src="../../../../../doc/DialogAnimation.PNG" /></br></br>
      * Where this style is written in styles.xml file , located under values folder.</br>
      * fade_in_anim_for_example is actual animation located in anim folder and is used to animate dialog show.</br>
      * Second fade_out animation is used to animate dialog hide.</br></br>
@@ -708,7 +725,7 @@ public class Util {
 
     /**
      * Creates new dialog without title, with transparent background and custom animation.</br></br>
-     * <img src="./DialogAnimation.PNG" /></br></br>
+     * <img src="../../../../../doc/DialogAnimation.PNG" /></br></br>
      * Where this style is written in styles.xml file , located under values folder.</br>
      * fade_in_anim_for_example is actual animation located in anim folder and is used to animate dialog show.</br>
      * Second fade_out animation is used to animate dialog hide.</br></br>
@@ -741,7 +758,7 @@ public class Util {
 
     /**
      * Sets animation to dialog.
-     * <img src="./DialogAnimation.PNG" /></br></br>
+     * <img src="../../../../../doc/DialogAnimation.PNG" /></br></br>
      * Where this style is written in styles.xml file , located under values folder.</br>
      * fade_in_anim_for_example is actual animation located in anim folder and is used to animate dialog show.</br>
      * Second fade_out animation is used to animate dialog hide.</br></br>
