@@ -166,4 +166,61 @@ public class Time {
         return c.getTimeInMillis();
     }
 
+    /**
+     * @return UTC Date with 0 hour, minute and second and includes current device time zone.
+     */
+    public static long getUTCDateWithTimeZone(){
+        Calendar c = Calendar.getInstance();
+        c.setTimeZone(TimeZone.getDefault());
+        c.setTimeInMillis(System.currentTimeMillis());
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+
+        c = Calendar.getInstance();
+        c.setTimeZone(TimeZone.getTimeZone(UTC));
+        c.set(year,month,day,0,0,0);
+        return c.getTimeInMillis();
+    }
+
+    /**
+     * Generates UTC Date with given month and day, with 0 hour, minute and second and includes current device time zone.
+     * @param month
+     * @param day
+     * @return UTC Date with 0 hour, minute and second and includes current device time zone.
+     */
+    public static long getUTCDateWithTimeZone(int month,int day){
+        Calendar c = Calendar.getInstance();
+        c.setTimeZone(TimeZone.getDefault());
+        c.setTimeInMillis(System.currentTimeMillis());
+        int year = c.get(Calendar.YEAR);
+
+        c = Calendar.getInstance();
+        c.setTimeZone(TimeZone.getTimeZone(UTC));
+        c.set(year,month,day,0,0,0);
+        return c.getTimeInMillis();
+    }
+
+    /**
+     * Class that represents device's current day.
+     */
+    public static class ToDay{
+
+        /**
+         * @return device's current day of month.
+         */
+        public static int getDay(){
+            Calendar cal = Calendar.getInstance();
+            return cal.get(Calendar.DAY_OF_MONTH);
+        }
+
+        /**
+         * @return device's current month.
+         */
+        public static int getMonth(){
+            Calendar cal = Calendar.getInstance();
+            return cal.get(Calendar.MONTH);
+        }
+    }
+
 }
