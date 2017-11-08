@@ -74,13 +74,19 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
+import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -125,6 +131,16 @@ public class Util {
     private static InputMethodManager keyboard;
     private static SharedPreferences sharedPref;
     private static Vibrator vibrator;
+
+    private static String [] globalIpDetectorLinks = {
+            "https://api.ipify.org",
+            "http://checkip.amazonaws.com/",
+            "http://icanhazip.com/",
+            "http://www.trackip.net/ip",
+            "http://myexternalip.com/raw",
+            "http://ipecho.net/plain",
+            "http://bot.whatismyipaddress.com/"
+    };
 
     private Util() {}
 
@@ -1590,6 +1606,38 @@ public class Util {
         }
         return false;
     }
+
+    /**
+     * This method should be called asynchronously (from non ui thread) because this call
+     * requires downloading data from internet.
+     * @return global ip address
+     */
+    public static String getGlobalIpAddress(){
+        if(globalIpDetectorLinks == null || globalIpDetectorLinks.length <= 0 ) {
+            Util.log("globalIpDetectorLinks is null or empty!");
+            return null;
+        }
+        for (String link: globalIpDetectorLinks) {
+            try {
+                return getPublicIpAddress(link);
+            } catch (Exception e) {
+                log("There was some problem while trying to retrieve global ip address: " + e.toString());
+            }
+        }
+        log("Global ip can not be retrieved");
+        return null;
+    }
+
+    private static String getPublicIpAddress(String link) throws Exception {
+        Util.log("Trying to get global ip address from: " + link);
+        URL url = new URL(link);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setConnectTimeout((int) TimeUnit.SECONDS.toMillis(2));
+        InputStream inputStream = url.openStream();
+        Scanner s = new Scanner(inputStream, Helper.UTF8).useDelimiter("\\A");
+        return s.next();
+    }
+
 
 	/*	public static void showNotification(Activity activity, int iconId, String title, String text, Class open) {
 	if(activity == null) return;
