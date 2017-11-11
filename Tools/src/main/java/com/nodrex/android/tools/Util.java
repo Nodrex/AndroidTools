@@ -92,7 +92,7 @@ import java.util.concurrent.TimeUnit;
  * This class contains useful methods and utilities for Android.
  * @author Nodar Tchumbadze
  * @since 2014
- * @version 2.0
+ * @version 2.1
  */
 public class Util {
 
