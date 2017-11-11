@@ -1,6 +1,5 @@
 package com.nodrex.android.tools;
 
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
@@ -51,6 +50,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.text.Html;
+import android.text.InputType;
 import android.text.Spanned;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -78,7 +78,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.Inet4Address;
 import java.net.InetAddress;
-import java.net.MalformedURLException;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.URL;
@@ -184,7 +183,6 @@ public class Util {
      * @param activity
      * @return ConnectivityManager for future use.
      */
-
     public static ConnectivityManager getConnectivityManager(Activity activity) {
         if (connectivityManager != null) return connectivityManager;
         if (activity == null) return null;
@@ -264,8 +262,7 @@ public class Util {
      */
     public static boolean isVibrateSupported(Activity activity) {
         getVibrator(activity);
-        if (vibrator == null) return false;
-        return vibrator.hasVibrator();
+        return vibrator != null && vibrator.hasVibrator();
     }
 
     /**
@@ -273,8 +270,7 @@ public class Util {
      * @param activity
      */
     public static void setPortraitOrientation(Activity activity) {
-        if (activity == null) return;
-        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        if(activity != null) activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     /**
@@ -282,8 +278,7 @@ public class Util {
      * @param activity
      */
     public static void setLandscapeOrientation(Activity activity) {
-        if (activity == null) return;
-        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        if(activity != null) activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
 
     /**
@@ -291,8 +286,7 @@ public class Util {
      * @param activity
      */
     public static void setUnspecifiedOrientation(Activity activity) {
-        if (activity == null) return;
-        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        if(activity != null) activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
     }
 
     /**
@@ -340,8 +334,7 @@ public class Util {
      * @return Resources.
      */
     public static Resources getResources(Activity activity) {
-        if (activity == null) return null;
-        return activity.getResources();
+        return activity == null ? null : activity.getResources();
     }
 
     /**
@@ -351,8 +344,7 @@ public class Util {
      */
     public static String getStrFromRes(Activity activity, int id) {
         Resources resources = getResources(activity);
-        if (resources == null) return null;
-        return resources.getString(id);
+        return resources == null ? null : resources.getString(id);
     }
 
     /**
@@ -364,23 +356,18 @@ public class Util {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 return ContextCompat.getColor(activity, id);
-            } else {
-                return getColorFromResOldStyle(activity, id);
             }
-        } catch (Exception e) {
-            return getColorFromResOldStyle(activity, id);
-        }
+        } catch (Exception e) {}
+        return getColorFromResOldStyle(activity, id);
     }
 
     @SuppressWarnings("deprecation")
     private static int getColorFromResOldStyle(Activity activity, int id) {
-        Resources resources = getResources(activity);
-        if (resources == null) return -1;
         try {
-            return resources.getColor(id);
-        } catch (Exception e) {
-            return -1;
-        }
+            Resources resources = getResources(activity);
+            if(resources != null) return resources.getColor(id);
+        } catch (Exception e) {}
+        return -1;
     }
 
     /**
@@ -394,12 +381,9 @@ public class Util {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
                 return getDrawableFromResNewStyle(activity, resources, id);
-            } else {
-                return getDrawableFromResOldStyle(resources, id);
             }
-        } catch (Exception e) {
-            return getDrawableFromResOldStyle(resources, id);
-        }
+        } catch (Exception e) {}
+        return getDrawableFromResOldStyle(resources, id);
     }
 
     @SuppressLint("NewApi")
@@ -419,8 +403,7 @@ public class Util {
      */
     public static Bitmap getBitmapFromRes(Activity activity, int id) {
         Resources resources = getResources(activity);
-        if (resources == null) return null;
-        return BitmapFactory.decodeResource(resources, id);
+        return resources == null ? null : BitmapFactory.decodeResource(resources, id);
     }
 
     /**
@@ -430,8 +413,7 @@ public class Util {
      */
     public static int getIntFromRes(Activity activity, int id) {
         Resources resources = getResources(activity);
-        if (resources == null) return 0;
-        return resources.getInteger(id);
+        return resources == null ? -1 : resources.getInteger(id);
     }
 
     /**
@@ -441,25 +423,23 @@ public class Util {
      */
     public static float getDimensionFromRes(Activity activity, int id) {
         Resources resources = getResources(activity);
-        if (resources == null) return 0;
-        return resources.getDimension(id);
+        return resources == null ? -1 : resources.getDimension(id);
     }
 
     //TODO should be tested
-
     /**
-     * <img src="../../../../../doc/formatedStr.PNG" /><br></br>
+     * <img src="../../../../../doc/formattedStr.PNG" /></br></br>
      * This is strings.xml content where u , means underline and b means bold.
      * @param activity
      * @param id
-     * @return formated String from resources, more concretely from strings.xml which is in values folder.
+     * @return formatted String from resources, more concretely from strings.xml which is in values folder.
      */
     public static String getFormattedStrFromRes(Activity activity, int id) {
         String str = getStrFromRes(activity, id);
         if (str == null) return null;
-        Spanned formatedText = Html.fromHtml(str);
-        if (formatedText == null) return str;
-        return formatedText.toString();
+        Spanned formattedText = Html.fromHtml(str);
+        if(formattedText == null) return str;
+        return formattedText.toString();
     }
 
     /**
@@ -470,8 +450,7 @@ public class Util {
         Resources resources = getResources(activity);
         if (resources == null) return false;
         Configuration configuration = resources.getConfiguration();
-        if (configuration == null) return false;
-        return configuration.orientation == Configuration.ORIENTATION_LANDSCAPE;
+        return configuration != null && configuration.orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
     /**
@@ -482,8 +461,7 @@ public class Util {
         Resources resources = getResources(activity);
         if (resources == null) return false;
         Configuration configuration = resources.getConfiguration();
-        if (configuration == null) return false;
-        return configuration.orientation == Configuration.ORIENTATION_PORTRAIT;
+        return configuration != null && configuration.orientation == Configuration.ORIENTATION_PORTRAIT;
     }
 
     /**
@@ -494,16 +472,16 @@ public class Util {
     public static void initLang(Activity activity, String langPostFix) {
         try {
             Resources res = getResources(activity);
+            if(res == null) return;
             DisplayMetrics dm = res.getDisplayMetrics();
             Configuration conf = res.getConfiguration();
             conf.locale = new Locale(langPostFix);
             res.updateConfiguration(conf, dm);
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
     }
 
     /**
-     * Sets font for TextView.
+     * Sets font to TextView.
      * @param activity
      * @param textView
      * @param fullFontName "fontName.ttf" if you will put font under assets folder,</br>
@@ -514,8 +492,7 @@ public class Util {
         AssetManager assets = activity.getAssets();
         if (assets == null) return;
         Typeface typeFace = Typeface.createFromAsset(assets, fullFontName);
-        if (typeFace == null) return;
-        textView.setTypeface(typeFace);
+        if (typeFace != null) textView.setTypeface(typeFace);
     }
 
     /**
@@ -523,18 +500,17 @@ public class Util {
      * @param textView
      */
     public static void underlineText(TextView textView) {
-        if(textView == null) log("textView is null in underlineText method");
-        textView.setPaintFlags(textView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        if(textView != null) textView.setPaintFlags(textView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
     }
 
     /**
-     * <img src="../../../../../doc/actionBar.PNG"/><br></br>
+     * <img src="../../../../../doc/actionBar.PNG" /></br></br>
      * Sets up action bar background and icon.
      * @param activity
      * @param background
      * @param logo
+     * @deprecated
      */
-    @Deprecated
     public static void setUpActionBar(Activity activity, Drawable background, Drawable logo) {
         if (activity == null) return;
         ActionBar actionBar = activity.getActionBar();
@@ -547,13 +523,13 @@ public class Util {
     }
 
     /**
-     * <img src="../../../../../doc/actionBar.PNG"/><br></br>
+     * <img src="../../../../../doc/actionBar.PNG" /></br></br>
      * Sets up action bar background and icon.
      * @param activity
      * @param background
      * @param logoId of drawable res.
+     * @deprecated
      */
-    @Deprecated
     public static void setUpActionBar(Activity activity, Drawable background, int logoId) {
         if (activity == null) return;
         ActionBar actionBar = activity.getActionBar();
@@ -566,13 +542,13 @@ public class Util {
     }
 
     /**
-     * <img src="../../../../../doc/actionBar.PNG"/><br></br>
+     * <img src="../../../../../doc/actionBar.PNG" /></br></br>
      * Sets up action bar background and icon.
      * @param activity
      * @param backgroundColorId R.color.someColor
      * @param logoId of drawable res.
+     * @deprecated
      */
-    @Deprecated
     public static void setUpActionBar(Activity activity, int backgroundColorId, int logoId) {
         if (activity == null) return;
         ActionBar actionBar = activity.getActionBar();
@@ -585,13 +561,13 @@ public class Util {
     }
 
     /**
-     * <img src="../../../../../doc/actionBar.PNG"/><br></br>
+     * <img src="../../../../../doc/actionBar.PNG" /></br></br>
      * Sets up action bar background and icon.
      * @param activity
      * @param backgroundColorId of colors.xml which is located under values folder.
      * @param logo
+     * @deprecated
      */
-    @Deprecated
     public static void setUpActionBar(Activity activity, int backgroundColorId, Drawable logo) {
         if (activity == null) return;
         ActionBar actionBar = activity.getActionBar();
@@ -604,13 +580,13 @@ public class Util {
     }
 
     /**
-     * <img src="../../../../../doc/actionBar.PNG"/><br></br>
+     * <img src="../../../../../doc/actionBar.PNG" /></br></br>
      * Sets up action bar background and icon.
      * @param activity
      * @param backgroundColorCode "#FFFFFF"
      * @param logo
+     * @deprecated
      */
-    @Deprecated
     public static void setUpActionBar(Activity activity, String backgroundColorCode, Drawable logo) {
         if (activity == null) return;
         ActionBar actionBar = activity.getActionBar();
@@ -623,13 +599,13 @@ public class Util {
     }
 
     /**
-     * <img src="../../../../../doc/actionBar.PNG"/><br></br>
+     * <img src="../../../../../doc/actionBar.PNG" /></br></br>
      * Sets up action bar background and icon.
      * @param activity
      * @param backgroundColorCode "#FFFFFF"
      * @param logoId of drawable res.
+     * @deprecated
      */
-    @Deprecated
     public static void setUpActionBar(Activity activity, String backgroundColorCode, int logoId) {
         if (activity == null) return;
         ActionBar actionBar = activity.getActionBar();
@@ -642,13 +618,13 @@ public class Util {
     }
 
     /**
-     * <img src="../../../../../doc/actionBar.PNG"/><br></br>
+     * <img src="../../../../../doc/actionBar.PNG" /></br></br>
      * Sets up action bar background and icon.
      * @param actionBar activity.getActionBar()
      * @param backgroundColorCode android.graphics.Color.WHITE
      * @param logoId of drawable res.
+     * @deprecated
      */
-    @Deprecated
     public static void setUpActionBar(ActionBar actionBar, int backgroundColorCode, int logoId) {
         if (actionBar == null) return;
         actionBar.setBackgroundDrawable(new ColorDrawable(backgroundColorCode));
@@ -659,13 +635,13 @@ public class Util {
     }
 
     /**
-     * <img src="../../../../../doc/actionBar.PNG"/><br></br>
+     * <img src="../../../../../doc/actionBar.PNG" /></br></br>
      * Sets up action bar background and icon.
      * @param actionBar activity.getActionBar()
      * @param backgroundColorCode android.graphics.Color.WHITE
      * @param logo
+     * @deprecated
      */
-    @Deprecated
     public static void setUpActionBar(ActionBar actionBar, int backgroundColorCode, Drawable logo) {
         if (actionBar == null) return;
         actionBar.setBackgroundDrawable(new ColorDrawable(backgroundColorCode));
@@ -690,10 +666,8 @@ public class Util {
         Window window = dialog.getWindow();
         if (window != null) {
             window.setBackgroundDrawableResource(android.R.color.transparent);
-            if (clearDim)
-                window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-            if (fullScreen)
-                window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            if(clearDim) window.clearFlags(android.view.WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+            if(fullScreen) window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         }
         dialog.setContentView(layoutId);
         dialog.setCanceledOnTouchOutside(CancelOnOutsideTouch);
@@ -734,8 +708,7 @@ public class Util {
         Window window = dialog.getWindow();
         if (window == null) return dialog;
         LayoutParams attributes = window.getAttributes();
-        if (attributes == null) return dialog;
-        attributes.dimAmount = dimAmount;
+        if(attributes != null) attributes.dimAmount = dimAmount;
         return dialog;
     }
 
@@ -785,21 +758,19 @@ public class Util {
         Window window = dialog.getWindow();
         if (window == null) return;
         LayoutParams attributes = window.getAttributes();
-        if (attributes == null) return;
-        attributes.windowAnimations = animName;
+        if(attributes != null) attributes.windowAnimations = animName;
     }
 
     /**
      * Dismiss and release all resources of dialog.
      * @param dialog
      */
-    public static void clearDialog(Dialog dialog) {
-        if (dialog == null) return;
+    public static Dialog clearDialog(Dialog dialog) {
+        if(dialog == null) return null;
         try {
             dialog.dismiss();
-        } catch (Exception e) {
-        }
-        dialog = null;
+        } catch (Exception e) {}
+        return null;
     }
 
     /**
@@ -812,8 +783,7 @@ public class Util {
         Resources resources = getResources(activity);
         if (resources == null) return 0;
         DisplayMetrics metrics = resources.getDisplayMetrics();
-        if (metrics == null) return 0;
-        return dp * metrics.density;
+        return metrics == null ? 0 : dp * metrics.density;
     }
 
     /**
@@ -826,8 +796,14 @@ public class Util {
         Resources resources = getResources(activity);
         if (resources == null) return 0;
         DisplayMetrics metrics = resources.getDisplayMetrics();
-        if (metrics == null) return 0;
-        return px / metrics.density;
+        return metrics == null ? 0 : px / metrics.density;
+    }
+
+    public static float getDensity(Activity activity){
+        Resources resources = getResources(activity);
+        if(resources == null) return 0;
+        DisplayMetrics displayMetrics = resources.getDisplayMetrics();
+        return displayMetrics == null ? 0 : displayMetrics.density;
     }
 
     /**
@@ -836,6 +812,7 @@ public class Util {
      * @param style R.style.AppTheme
      * @param layout R.layout.activity_main
      * @param title
+     * @deprecated set them and title on each activity or on app in manifest file.
      */
     public static void setup(Activity activity, int style, int layout, String title) {
         activity.setTheme(style);
@@ -855,12 +832,10 @@ public class Util {
         if (window == null) return;
         View decorView = window.getDecorView();
         if (decorView == null) return;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            KitkatSystemUiVisibility(decorView);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            jellyBeanSystemUiVisibility(decorView);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            iceCreamSandwichSystemUiVisibility(decorView, window);
+        switch (Build.VERSION.SDK_INT){
+            case Build.VERSION_CODES.KITKAT : KitkatSystemUiVisibility(decorView); break;
+            case Build.VERSION_CODES.JELLY_BEAN : jellyBeanSystemUiVisibility(decorView); break;
+            case Build.VERSION_CODES.ICE_CREAM_SANDWICH : iceCreamSandwichSystemUiVisibility(decorView,window); break;
         }
     }
 
@@ -917,18 +892,24 @@ public class Util {
             boolean menu = false;
             if (activity != null) menu = ViewConfiguration.get(activity).hasPermanentMenuKey();
             return back || home || apps || menu;
-        } catch (Exception e) {
-        }
+        } catch (Exception e) {}
         return false;
     }
 
     /**
-     * Underlines text view.
-     * @param textView
+     * Sets EditText input type to plain text password and also makes password visible.
+     * @param editText
      */
-    public static void underline(TextView textView) {
-        if (textView == null) return;
-        textView.setPaintFlags(textView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+    public static void showPassword(EditText editText) {
+        if(editText != null) editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+    }
+
+    /**
+     * Sets EditText input type to plain text password and also makes password invisible.
+     * @param editText
+     */
+    public static void hidePassword(EditText editText) {
+        if (editText != null) editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
     }
 
     /**
@@ -952,16 +933,13 @@ public class Util {
 		return (wifiNetwork != null && wifiNetwork.isConnected());
 		*/
         //TODO should be tested
-
         getConnectivityManager(activity);
         if (connectivityManager == null) return false;
         NetworkInfo info = connectivityManager.getActiveNetworkInfo();
-        if (info == null) return false;
-        return (info.isConnected() && info.getType() == ConnectivityManager.TYPE_WIFI);
+        return info != null && (info.isConnected() && info.getType() == ConnectivityManager.TYPE_WIFI);
     }
 
     //TODO should be tested
-
     /**
      * @param activity
      * @return true if connection type is ethernet, false otherwise.
@@ -974,8 +952,7 @@ public class Util {
         getConnectivityManager(activity);
         if (connectivityManager == null) return false;
         NetworkInfo info = connectivityManager.getActiveNetworkInfo();
-        if (info == null) return false;
-        return (info.isConnected() && info.getType() == ConnectivityManager.TYPE_ETHERNET);
+        return info != null && (info.isConnected() && info.getType() == ConnectivityManager.TYPE_ETHERNET);
     }
 
     /**
@@ -1014,6 +991,22 @@ public class Util {
     }
 
     /**
+     * Converts connection type in to string
+     * @param connectionType
+     * @return
+     */
+    public static String convertToStr(int connectionType){
+        switch (connectionType){
+            case ETHERNET: return "Ethernet";
+            case WIFI: return "Wifi";
+            case G2: return "2g";
+            case G3: return "3g";
+            case G4: return "4g";
+            default: return  "Unknown";
+        }
+    }
+
+    /**
      * @return local ip address.
      */
     public static String getLocalIpAddress() {
@@ -1032,8 +1025,6 @@ public class Util {
         }
         return null;
     }
-
-    //TODO  shouldShowRequestPermissionRationale() analise for future.
 
     /**
      * Activity method onRequestPermissionsResult should be overridden in given activity to handle location permission if this one is not written in manifest file.<br>
@@ -1075,17 +1066,10 @@ public class Util {
      */
     private static Location reqLocUpdatesAndGetLastLoc(Activity activity,int requestCode,boolean showPermissionDialog, LocationManager locationManager, String provider) {
         LocationListener locationListener = new LocationListener() {
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-            }
-
-            public void onProviderEnabled(String provider) {
-            }
-
-            public void onProviderDisabled(String provider) {
-            }
-
-            public void onLocationChanged(Location location) {
-            }
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
+            public void onProviderEnabled(String provider) {}
+            public void onProviderDisabled(String provider) {}
+            public void onLocationChanged(Location location) {}
         };
         long updates = 60000;// 1 minute
         float distance = 10;// meter
@@ -1106,12 +1090,14 @@ public class Util {
      * @return width:height
      */
     public static String getResolution(Activity activity) {
-        Display display = activity.getWindowManager().getDefaultDisplay();
+        if(activity == null) return null;
+        WindowManager windowManager = activity.getWindowManager();
+        if(windowManager == null) return null;
+        Display display = windowManager.getDefaultDisplay();
+        if(display == null) return null;
         Point size = new Point();
         display.getSize(size);
-        int width = size.x;
-        int height = size.y;
-        return width + ":" + height;
+        return size.x + ":" + size.y;
     }
 
     /**
@@ -1123,14 +1109,10 @@ public class Util {
         PackageManager packageManager = activity.getPackageManager();
         if (packageManager == null) return null;
         String packageName = activity.getPackageName();
-        if (packageName == null) return null;
-        PackageInfo packageInfo = null;
         try {
-            packageInfo = packageManager.getPackageInfo(packageName, 0);
-        } catch (NameNotFoundException e) {
-            return null;
-        }
-        return packageInfo;
+            return packageName == null ? null : packageManager.getPackageInfo(packageName, 0);
+        } catch (NameNotFoundException e) {}
+        return null;
     }
 
     /**
@@ -1140,8 +1122,7 @@ public class Util {
      */
     public static String getAppVersionName(Activity activity) {
         PackageInfo packageInfo = getPackageInfo(activity);
-        if (packageInfo == null) return null;
-        return packageInfo.versionName;
+        return packageInfo == null ? null : packageInfo.versionName;
     }
 
     /**
@@ -1151,8 +1132,7 @@ public class Util {
      */
     public static int getAppVersionCode(Activity activity) {
         PackageInfo packageInfo = getPackageInfo(activity);
-        if (packageInfo == null) return 0;
-        return packageInfo.versionCode;
+        return packageInfo == null ? 0 : packageInfo.versionCode;
     }
 
     /**
@@ -1183,8 +1163,7 @@ public class Util {
         WifiManager manager = (WifiManager) activity.getSystemService(Context.WIFI_SERVICE);
         if(manager == null) return null;
         WifiInfo info = manager.getConnectionInfo();
-        if(info == null) return null;
-        return info.getMacAddress();
+        return info == null ? null : info.getMacAddress();
     }
 
     /**
@@ -1196,8 +1175,7 @@ public class Util {
         WifiManager wifiManager = (WifiManager) activity.getSystemService(Context.WIFI_SERVICE);
         if(wifiManager == null) return null;
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-        if(wifiInfo == null) return null;
-        return wifiInfo.getSSID();
+        return wifiInfo == null ? null : wifiInfo.getSSID();
     }
 
     /**
@@ -1363,9 +1341,7 @@ public class Util {
      * @return true if is phone, or phablet
      */
     public static boolean isPhone(Activity activity){
-        if(activity == null) return false;
-        int size = getIntFromRes(activity, R.integer.deviceSize);
-        return size == 0;
+        return activity != null && 0 == getIntFromRes(activity, R.integer.deviceSize);
     }
 
     /**
@@ -1373,9 +1349,7 @@ public class Util {
      * @return true if is 7 inch tablet, or 8 inch tablet.
      */
     public static boolean isTablet7(Activity activity){
-        if(activity == null) return false;
-        int size = getIntFromRes(activity, R.integer.deviceSize);
-        return size == 1;
+        return activity != null && 1 == getIntFromRes(activity, R.integer.deviceSize);
     }
 
     /**
@@ -1383,9 +1357,23 @@ public class Util {
      * @return true if is 10 inch tablet.
      */
     public static boolean isTablet10(Activity activity){
+        return activity != null && 2 == getIntFromRes(activity, R.integer.deviceSize);
+    }
+
+    /**
+     * Detects if app is running on TV Device.
+     * @param activity
+     * @return true if device uses xlarge size or has feature TELEVISION or LEANBACK. false otherwise.
+     */
+    public static boolean isTV(Activity activity){
         if(activity == null) return false;
-        int size = getIntFromRes(activity, R.integer.deviceSize);
-        return size == 2;
+        int tmp = getIntFromRes(activity, R.integer.deviceSize);
+        boolean size = (tmp == 2);
+        PackageManager packageManager = activity.getPackageManager();
+        if(packageManager == null) return size;
+        boolean television = packageManager.hasSystemFeature(PackageManager.FEATURE_TELEVISION);
+        boolean leanback = packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK);
+        return (television || leanback || size);
     }
 
     /**
@@ -1394,8 +1382,8 @@ public class Util {
      * @param text
      */
     public static void log(String text) {
+        if(disableLogs)return;
         try {
-            if(disableLogs)return;
             Log.d(LOG_TAG, text);
         } catch (Exception e) {}
     }
@@ -1416,7 +1404,8 @@ public class Util {
 
     /**
      * Changes month language of DatePicker view.
-     * This method changes only once and if you want language to be changed after date selection, you should set {@link DateChangedListener}.
+     * This method changes only once and if you want language to be changed after date selection, you should set {@link DateChangedListener}.<br></br>
+     * Also this method should be called after {@link DatePicker#init(int, int, int, OnDateChangedListener)} method to change language properly.
      * @param activity
      * @param datePicker datePicker which month language should be changed.
      * @param arrayId R.array.long_months_values for example.
@@ -1425,7 +1414,6 @@ public class Util {
         try {
             Resources resources = getResources(activity);
             String [] months = resources.getStringArray(arrayId);
-
             int monthSpinnerId = resources.getIdentifier("month", "id", "android");
             if (monthSpinnerId == 0)return;
             NumberPicker monthSpinner = (NumberPicker) datePicker.findViewById(monthSpinnerId);
@@ -1469,8 +1457,7 @@ public class Util {
      * @param window dialog.getWindow() for example.
      */
     public static void hideKeyboard(Window window){
-        if(window == null) return;
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        if(window != null) window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     /**
@@ -1481,8 +1468,7 @@ public class Util {
     public static void hideKeyboard(Activity activity, IBinder WindowToken){
         if(WindowToken == null) return;
         getKeyboard(activity);
-        if(keyboard == null) return;
-        keyboard.hideSoftInputFromWindow(WindowToken, 0);
+        if(keyboard != null) keyboard.hideSoftInputFromWindow(WindowToken, 0);
     }
 
     /**
@@ -1494,8 +1480,7 @@ public class Util {
         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         if(notification == null) return;
         Ringtone ringtone = RingtoneManager.getRingtone(activity, notification);
-        if(ringtone == null) return;
-        ringtone.play();
+        if(ringtone != null) ringtone.play();
     }
 
     /**
@@ -1525,9 +1510,8 @@ public class Util {
             if(powerManager == null) return false;
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH){
                 return isDeviceLockedNewStyle(powerManager);
-            }else{
-                return isDeviceLockedOldStyle(powerManager);
             }
+            return isDeviceLockedOldStyle(powerManager);
         } catch (Exception e) {
             log("isDeviceLocked: Exception: " + e.toString());
         }
@@ -1551,8 +1535,7 @@ public class Util {
     public static boolean canCall(Activity activity){
         if(activity == null) return false;
         PackageManager pm = activity.getPackageManager();
-        if(pm == null) return false;
-        return pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
+        return pm != null && pm.hasSystemFeature(PackageManager.FEATURE_TELEPHONY);
     }
 
     /**
