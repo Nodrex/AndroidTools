@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="longMonths">
+    <string-array name="monthsLong">
         <item>იანვარი</item>
         <item>თებერვალი</item>
         <item>მარტი</item>
@@ -15,8 +15,8 @@
         <item>ნოემბერი</item>
         <item>დეკემბერი</item>
     </string-array>
-    
-    <string-array name="shortMonths">
+
+    <string-array name="monthsShort">
         <item>იან</item>
         <item>თებ</item>
         <item>მარ</item>
@@ -29,6 +29,16 @@
         <item>ოქტ</item>
         <item>ნოე</item>
         <item>დეკ</item>
+    </string-array>
+
+    <string-array name="daysOfWeek">
+        <item>ორშაბათი</item>
+        <item>სამშაბათი</item>
+        <item>ოთხშაბათი</item>
+        <item>ხუთშაბათი</item>
+        <item>პარასკევი</item>
+        <item>შაბათი</item>
+        <item>კვირა</item>
     </string-array>
 
 </resources>

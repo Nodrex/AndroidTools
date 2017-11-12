@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="longMonths">
+    <string-array name="monthsLong">
         <item>January</item>
         <item>February</item>
         <item>March</item>
@@ -16,19 +16,29 @@
         <item>December</item>
     </string-array>
 
-    <string-array name="shortMonths">
+    <string-array name="monthsShort">
         <item>Jan</item>
         <item>Feb</item>
         <item>Mar</item>
         <item>Apr</item>
         <item>May</item>
-        <item>Jun</item>
-        <item>Jul</item>
+        <item>June</item>
+        <item>July</item>
         <item>Aug</item>
-        <item>Sep</item>
+        <item>Sept</item>
         <item>Oct</item>
         <item>Nov</item>
         <item>Dec</item>
+    </string-array>
+
+    <string-array name="daysOfWeek">
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
     </string-array>
 
 </resources>
