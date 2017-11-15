@@ -43,6 +43,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.Process;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.provider.Settings.Secure;
@@ -1620,6 +1621,18 @@ public class Util {
         Scanner s = new Scanner(inputStream, Helper.UTF8).useDelimiter("\\A");
         return s.next();
     }
+
+    public static void closeApp(Activity activity){
+        try {
+            if(activity != null) activity.finishAffinity();
+        }catch (Exception e){
+            log("There was some problem, while trying to call finishAffinity: " + e.toString());
+        }
+        Process.killProcess(Process.myPid());
+        System.exit(0);
+    }
+
+
 
 
 	/*	public static void showNotification(Activity activity, int iconId, String title, String text, Class open) {
