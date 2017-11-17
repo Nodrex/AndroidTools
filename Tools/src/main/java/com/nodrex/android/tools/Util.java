@@ -6,8 +6,10 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
+import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -1622,6 +1624,10 @@ public class Util {
         return s.next();
     }
 
+    /**
+     * Closes appliaction
+     * @param activity
+     */
     public static void closeApp(Activity activity){
         try {
             if(activity != null) activity.finishAffinity();
@@ -1632,6 +1638,19 @@ public class Util {
         System.exit(0);
     }
 
+    /**
+     * Restarts application.
+     * @param activity
+     * @param activityClass
+     */
+    public static void restartApp(Activity activity,Class activityClass){
+        Intent mStartActivity = new Intent(activity, activityClass);
+        int mPendingIntentId = 123456;
+        PendingIntent mPendingIntent = PendingIntent.getActivity(activity, mPendingIntentId,    mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager mgr = (AlarmManager)activity.getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+        System.exit(0);
+    }
 
 
 
