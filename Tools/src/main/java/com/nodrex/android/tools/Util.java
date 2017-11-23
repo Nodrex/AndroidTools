@@ -1639,7 +1639,7 @@ public class Util {
     }
 
     /**
-     * Restarts application.
+     * Restarts application after 100 millisecond delay.
      * @param activity
      * @param activityClass
      */
@@ -1649,6 +1649,21 @@ public class Util {
         PendingIntent mPendingIntent = PendingIntent.getActivity(activity, mPendingIntentId,    mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
         AlarmManager mgr = (AlarmManager)activity.getSystemService(Context.ALARM_SERVICE);
         mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+        System.exit(0);
+    }
+
+    /**
+     * Restarts application
+     * @param activity
+     * @param activityClass
+     * @param delay after which app should be started
+     */
+    public static void restartApp(Activity activity,Class activityClass, int delay){
+        Intent mStartActivity = new Intent(activity, activityClass);
+        int mPendingIntentId = 123456;
+        PendingIntent mPendingIntent = PendingIntent.getActivity(activity, mPendingIntentId,    mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager mgr = (AlarmManager)activity.getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + delay, mPendingIntent);
         System.exit(0);
     }
 
